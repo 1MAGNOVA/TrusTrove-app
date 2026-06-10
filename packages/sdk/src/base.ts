@@ -1,6 +1,6 @@
 import {
   Contract,
-  SorobanRpc,
+  rpc,
   TransactionBuilder,
   Networks,
   BASE_FEE,
@@ -42,11 +42,11 @@ export class BaseContractClient {
       .build();
 
     const sim = await server.simulateTransaction(tx);
-    if (SorobanRpc.Api.isSimulationError(sim)) {
+    if (rpc.Api.isSimulationError(sim)) {
       throw new Error(`Simulation failed for ${method}: ${sim.error}`);
     }
     
-    const resultVal = (sim as SorobanRpc.Api.SimulateTransactionSuccessResponse).result?.retval;
+    const resultVal = (sim as rpc.Api.SimulateTransactionSuccessResponse).result?.retval;
     if (!resultVal) {
       throw new Error(`No return value from simulation for ${method}`);
     }
@@ -72,7 +72,7 @@ export class BaseContractClient {
       .build();
 
     const sim = await server.simulateTransaction(tx);
-    if (SorobanRpc.Api.isSimulationError(sim)) {
+    if (rpc.Api.isSimulationError(sim)) {
       throw new Error(`Simulation failed for ${method}: ${sim.error}`);
     }
 
@@ -93,12 +93,12 @@ export class BaseContractClient {
 
     // Poll for confirmation
     let response = await server.getTransaction(result.hash);
-    while (response.status === SorobanRpc.Api.GetTransactionStatus.NOT_FOUND) {
+    while (response.status === rpc.Api.GetTransactionStatus.NOT_FOUND) {
       await new Promise(r => setTimeout(r, 1000));
       response = await server.getTransaction(result.hash);
     }
 
-    if (response.status === SorobanRpc.Api.GetTransactionStatus.FAILED) {
+    if (response.status === rpc.Api.GetTransactionStatus.FAILED) {
       throw new Error(`Transaction failed on-chain for ${method}`);
     }
 

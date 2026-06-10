@@ -1,4 +1,4 @@
-import { Networks, SorobanRpc } from '@stellar/stellar-sdk';
+import { Networks, rpc } from '@stellar/stellar-sdk';
 
 export const DEFAULT_NETWORK = {
   network: (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_STELLAR_NETWORK) || 'testnet',
@@ -70,6 +70,6 @@ export function getConfig(): SDKConfig {
   return activeConfig;
 }
 
-export function getSorobanServer(): SorobanRpc.Server {
-  return new SorobanRpc.Server(activeConfig.sorobanRpcUrl);
+export function getSorobanServer(): rpc.Server {
+  return new rpc.Server(activeConfig.sorobanRpcUrl);
 }
