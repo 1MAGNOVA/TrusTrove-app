@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useWalletStore } from '@/store/wallet';
 import { connectFreighter } from '@/lib/freighter';
+import { useBalances } from './useBalances';
 
 /**
  * Custom hook for managing Stellar wallet connection via Freighter.
@@ -27,6 +28,7 @@ export function useWallet() {
   const { address, connected, network, connect, disconnect } = useWalletStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { balances, loading: balancesLoading, error: balancesError, refetch: refetchBalances } = useBalances();
 
   /**
    * Initiates a Freighter wallet connection.
@@ -66,5 +68,9 @@ export function useWallet() {
     disconnectWallet,
     loading,
     error,
+    balances,
+    balancesLoading,
+    balancesError,
+    refetchBalances,
   };
 }
